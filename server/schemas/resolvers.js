@@ -1,10 +1,12 @@
 const { User } = require('../models');
+const { AuthenticationError } = require("apollo-server-express")
+const { signToken } = require('../utils/auth')
 
 const resolvers = {
     Query: {
         me: async (parent, args, context) => {
             if (context.user) {
-                const user = await User.findById(context.user.userId)
+                const user = await User.findOne({ _id: context.user._id }).select("-__v -password")
 
                 return user;
             }
@@ -35,16 +37,33 @@ const resolvers = {
 
             return { token, user };
         },
-        saveBook: async (parent, args, context) => {
+        saveBook: async (parent, { content }, context) => {
             if (context.user) {
-                // add book to User's savedBooks array
+                const userBook = await User.findByIdAndUpdate(
+                    { _id: context.user._id },
+                    { $push: { savedBooks: content } },
+                    { new: true }
+                )
+
+                return userBook;
             }
+            throw new AuthenticationError("No user found");
         },
 
-        removeBook: async (parent, args, context) => {
-            // remove book from User's saveBooks array
+        removeBook: async (parent, { bookId }, context) => {
+            if (context.user) {
+                const deleteBook = await User.findByIdAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { savedBooks: bookId } },
+                    { new: true }
+                )
+
+                return deleteBook
+            }
+
+            throw new AuthenticationError("No user found");
         },
-    },
+    }
 };
 
 

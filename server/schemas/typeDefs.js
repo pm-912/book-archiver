@@ -3,11 +3,12 @@ const typeDefs = `
         _id: ID
         username: String
         email: String
+        password: String
         savedBooks: [Book]
     }
 
     type Book {
-        authors: String
+        authors: [String]
         description: String
         bookId: String
         image: String
@@ -16,11 +17,11 @@ const typeDefs = `
     }
 
     type Query {
-        me(userId: ID): User
+        me: User
     }
 
     input SaveBook {
-        authors: String
+        authors: [String]
         description: String
         bookId: String
         image: String
