@@ -75,7 +75,7 @@ const SearchBooks = () => {
         return false;
       }
       const { data }= await saveBook({
-        variables: { bookId: bookToSave.bookId },
+        variables: { content: {...bookToSave}},
         headers: { Authorization: `Bearer ${token}`}
       });
 
