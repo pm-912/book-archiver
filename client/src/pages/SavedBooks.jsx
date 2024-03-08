@@ -15,7 +15,7 @@ import { GET_ME } from '../utils/queries'
 import { REMOVE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
   const [removeBook] = useMutation(REMOVE_BOOK)
   const token = Auth.loggedIn() ? Auth.getToken() : null;
   const { loading, error, data } = useQuery(GET_ME, {variables: { }}, {
@@ -25,12 +25,15 @@ const SavedBooks = () => {
       },
     },
   });
+
+  const userData = data?.me || {} 
+
   if (loading) {
     return <h2>LOADING...</h2>;
   }
   if (error) return <p>Error: {error.message}</p>;
 
-  if (data) setUserData(data.user || {})
+  // if (data) setUserData(data.user.me || {})
  
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
