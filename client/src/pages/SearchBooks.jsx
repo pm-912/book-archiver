@@ -66,8 +66,7 @@ const SearchBooks = () => {
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-    // get token
-    
+    console.log(bookToSave)
     
     try {
       const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -79,7 +78,6 @@ const SearchBooks = () => {
         variables: { bookId: bookToSave.bookId },
         headers: { Authorization: `Bearer ${token}`}
       });
-
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, data.bookId]);
